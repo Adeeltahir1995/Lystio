@@ -75,7 +75,7 @@ export default function Home() {
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+    <div style={{ display: "flex", height: "100vh", overflow: "hidden", backgroundColor:"white", color:"black" }}>
       {/* Map Section - occupies 50% of the screen width */}
       <div style={{ flex: "1", height: "100vh" }}>
         <Map
@@ -92,6 +92,7 @@ export default function Home() {
           padding: "10px",
           overflowY: "auto",
           height: "100vh",
+          color:"black"
         }}
       >
         <h2>Listing Panel</h2>
