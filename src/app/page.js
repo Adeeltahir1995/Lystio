@@ -10,9 +10,9 @@ export default function Home() {
     pageSize: 10,
     totalCount: 0,
   });
+  const [polygon, setPolygon] = useState(null);
   const [minPrice, setMinPrice] = useState(100);
   const [maxPrice, setMaxPrice] = useState(10000);
-  const [hoverListing, setHoverListing] = useState(null);
 
   const fetchData = () => {
     const payload = {
@@ -29,7 +29,10 @@ export default function Home() {
         floorType: [1],
         heatingType: [1],
         availableNow: true,
-        within: null,
+        within: polygon,
+        bbox: null,
+        near: null,
+        amenities: null,
       },
       sort: {
         rent: null,
@@ -65,7 +68,11 @@ export default function Home() {
 
   useEffect(() => {
     fetchData();
-  }, [minPrice, maxPrice]);
+  }, [minPrice, maxPrice, polygon]);
+
+  const handlePolygonDraw = (polygonData) => {
+    setPolygon(polygonData);
+  };
 
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
@@ -75,7 +82,6 @@ export default function Home() {
           listings={listings}
           minPrice={minPrice}
           maxPrice={maxPrice}
-          onHoverListing={setHoverListing}
         />
       </div>
 
@@ -112,7 +118,6 @@ export default function Home() {
               margin: "10px 0",
               padding: "10px",
               border: "1px solid #ccc",
-              backgroundColor: hoverListing === listing ? "#f0f8ff" : "white",
             }}
           >
             <h3>{listing.title}</h3>
