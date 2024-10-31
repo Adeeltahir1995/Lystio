@@ -92,7 +92,7 @@ export default function Home() {
           padding: "10px",
           overflowY: "auto",
           height: "100vh",
-          color:"black"
+          color: "black",
         }}
       >
         <h2>Listing Panel</h2>
@@ -119,12 +119,28 @@ export default function Home() {
               margin: "10px 0",
               padding: "10px",
               border: "1px solid #ccc",
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            <h3>{listing.title}</h3>
-            <p>{listing.abstract}</p>
-            <p>Price: ${listing.rent}</p>
-            <p>Size: {listing.size} m²</p>
+            {/* Display listing image */}
+            <img
+              src={listing.media && listing.media[0] ? listing.media[0].cdnUrl : ""}
+              alt={listing.title}
+              style={{
+                width: "80px",
+                height: "80px",
+                objectFit: "cover",
+                borderRadius: "5px",
+                marginRight: "10px",
+              }}
+            />
+            <div>
+              <h3>{listing.title}</h3>
+              <p>{listing.abstract}</p>
+              <p>Price: ${listing.rent}</p>
+              <p>Size: {listing.size} m²</p>
+            </div>
           </div>
         ))}
         <p>
