@@ -22,6 +22,7 @@ const Map = ({ listings, minPrice, maxPrice }) => {
       const [longitude, latitude] = location;
 
       if (rent >= minPrice && rent <= maxPrice) {
+        // Create marker element with price label
         const markerElement = document.createElement('div');
         markerElement.className = 'price-marker';
         markerElement.innerText = `$${rent}`;
@@ -31,27 +32,47 @@ const Map = ({ listings, minPrice, maxPrice }) => {
         markerElement.style.borderRadius = '5px';
         markerElement.style.fontWeight = 'bold';
         markerElement.style.padding = '12px';
-        markerElement.style.width='max-content'
+        markerElement.style.width = 'max-content';
+        markerElement.style.cursor = 'pointer';
 
 
+        // Use the first image from media array for the popup
         const imageUrl = media && media[0] ? media[0].cdnUrl : '';
 
-        new mapboxgl.Marker(markerElement)
+        // Create popup with listing details
+        const popup = new mapboxgl.Popup({
+          offset: 25,
+          closeButton: false,
+          closeOnClick: false,
+        }).setHTML(`
+          <div style="text-align: center;">
+            <img src="${imageUrl}" alt="${title}" style="width: 100px; height: auto; border-radius: 8px; margin-bottom: 5px;" />
+            <h4>${title}</h4>
+            <p>Price: $${rent}</p>
+          </div>
+        `);
+
+        // Create and add marker to the map
+        const marker = new mapboxgl.Marker(markerElement)
           .setLngLat([longitude, latitude])
-          .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`
-            <div style="text-align: center;">
-              <img src="${imageUrl}" alt="${title}" style="width: 100px; height: auto; border-radius: 8px; margin-bottom: 5px;" />
-              <h4>${title}</h4>
-              <p>Price: $${rent}</p>
-            </div>
-          `))
           .addTo(map);
+
+        // Show popup on hover
+        markerElement.addEventListener('mouseenter', () => {
+          marker.setPopup(popup).togglePopup();
+        });
+
+        // Hide popup when mouse leaves
+        markerElement.addEventListener('mouseleave', () => {
+          marker.togglePopup();
+        });
 
         bounds.extend([longitude, latitude]);
         markerCount += 1;
       }
     });
 
+    // Set map view based on marker count
     if (markerCount > 1) {
       map.fitBounds(bounds, { padding: 60, maxZoom: 13 });
     } else if (markerCount === 1) {
