@@ -4,6 +4,7 @@ import Map from "../components/Map";
 
 export default function Home() {
   const [listings, setListings] = useState([]);
+  const [mapMarkers, setMapMarkers] = useState([]); // State for map markers
   const [paging, setPaging] = useState({
     pageCount: 0,
     page: 0,
@@ -66,13 +67,50 @@ export default function Home() {
       });
   };
 
+  const fetchMapData = () => {
+    const payload = {
+      filter: {
+        size: [10, 1000],
+        rent: [minPrice, maxPrice],
+        roomsBed: [0, 99],
+        roomsBath: [0, 99],
+        type: [1],
+        subType: [1],
+        condition: [1],
+        accessibility: [1],
+        rentType: ["rent"],
+        floorType: [1],
+        heatingType: [1],
+        availableNow: true,
+        within: polygon,
+        bbox: null,
+        near: null,
+        amenities: null,
+      },
+      zoom: 0,
+      bbox: null,
+    };
+
+    fetch("https://api.lystio.co/tenement/search/map", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setMapMarkers(data); // Store the map markers
+      })
+      .catch((error) => {
+        console.error("Error fetching map markers:", error);
+      });
+  };
+
   useEffect(() => {
     fetchData();
+    fetchMapData();
   }, [minPrice, maxPrice, polygon]);
-
-  const handlePolygonDraw = (polygonData) => {
-    setPolygon(polygonData);
-  };
 
   return (
     <div style={{ display: "flex", height: "100vh", overflow: "hidden", backgroundColor:"white", color:"black" }}>
@@ -80,6 +118,7 @@ export default function Home() {
       <div style={{ flex: "1", height: "100vh" }}>
         <Map
           listings={listings}
+          mapMarkers={mapMarkers} // Pass the map markers to Map component
           minPrice={minPrice}
           maxPrice={maxPrice}
         />
@@ -123,7 +162,6 @@ export default function Home() {
               alignItems: "center",
             }}
           >
-            {/* Display listing image */}
             <img
               src={listing.media && listing.media[0] ? listing.media[0].cdnUrl : ""}
               alt={listing.title}

@@ -1,34 +1,31 @@
 import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 
-// Set your Mapbox token
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 const Map = ({ listings, minPrice, maxPrice }) => {
   const mapContainerRef = useRef(null);
 
   useEffect(() => {
-    // Initialize the map
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [16.3738, 48.2082], // Centered around Vienna for example
+      center: [16.3738, 48.2082],
       zoom: 12,
     });
 
-    // Set up bounds to adjust the map view for all markers
     const bounds = new mapboxgl.LngLatBounds();
+    let markerCount = 0;
 
     listings.forEach((listing) => {
       const { location, rent, title, media } = listing;
       const [longitude, latitude] = location;
 
       if (rent >= minPrice && rent <= maxPrice) {
-        // Create a custom marker element with the price label
         const markerElement = document.createElement('div');
         markerElement.className = 'price-marker';
         markerElement.innerText = `$${rent}`;
-        markerElement.style.backgroundColor = '#ff4757'; // Customize the color
+        markerElement.style.backgroundColor = '#ff4757';
         markerElement.style.color = '#fff';
         markerElement.style.padding = '5px';
         markerElement.style.borderRadius = '5px';
@@ -37,10 +34,8 @@ const Map = ({ listings, minPrice, maxPrice }) => {
         markerElement.style.width='max-content'
 
 
-        // Use the first image from media array for the popup
         const imageUrl = media && media[0] ? media[0].cdnUrl : '';
 
-        // Add the marker to the map
         new mapboxgl.Marker(markerElement)
           .setLngLat([longitude, latitude])
           .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`
@@ -49,19 +44,25 @@ const Map = ({ listings, minPrice, maxPrice }) => {
               <h4>${title}</h4>
               <p>Price: $${rent}</p>
             </div>
-          `)) // Display title and image in popup
+          `))
           .addTo(map);
 
         bounds.extend([longitude, latitude]);
+        markerCount += 1;
       }
     });
 
-    // Fit the map to the bounds of the markers
-    if (!bounds.isEmpty()) {
-      map.fitBounds(bounds, { padding: 50 });
+    if (markerCount > 1) {
+      map.fitBounds(bounds, { padding: 60, maxZoom: 13 });
+    } else if (markerCount === 1) {
+      const singleMarkerPosition = bounds.getCenter();
+      map.setCenter(singleMarkerPosition);
+      map.setZoom(13);
+    } else {
+      map.setCenter([16.3738, 48.2082]);
+      map.setZoom(12);
     }
 
-    // Cleanup on unmount
     return () => map.remove();
   }, [listings, minPrice, maxPrice]);
 
