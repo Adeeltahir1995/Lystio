@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Map from "../components/Map";
 import Header from "@/components/Header";
 import ListingCard from "../components/ListingCard";
+import { Box } from "@mui/material";
 
 export default function Home() {
   const [listings, setListings] = useState([]);
@@ -85,8 +86,8 @@ export default function Home() {
           color: "black",
         }}
       >
-        {/* Map Section */}
-        <div style={{ flex: "1", height: "100vh" }}>
+        {/* Map Section - Takes up 60% width */}
+        <div style={{ flex: "0 0 58%", height: "100vh" }}>
           <Map
             listings={listings}
             mapMarkers={mapMarkers}
@@ -95,11 +96,11 @@ export default function Home() {
           />
         </div>
 
-        {/* Listings Panel */}
+        {/* Listing Panel Section - Takes up 40% width */}
         <div
           style={{
-            flex: "1",
-            padding: "10px",
+            flex: "0 0 40%",
+            padding: "20px", // Outer padding for the listing panel
             overflowY: "auto",
             height: "100vh",
             color: "black",
@@ -121,12 +122,20 @@ export default function Home() {
               onChange={(e) => setMaxPrice(Number(e.target.value))}
             />
           </div>
-          {listings.map((listing, index) => (
-            <ListingCard key={index} listing={listing} />
-          ))}
-          <p>
-            Page {paging.page + 1} of {paging.pageCount}
-          </p>
+
+          {/* Grid Layout for Listings */}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(245px, 1fr))",
+              gap: 2, // Gap between cards
+              mt: 2,
+            }}
+          >
+            {listings.map((listing, index) => (
+              <ListingCard key={index} listing={listing} visible={true} />
+            ))}
+          </Box>
         </div>
       </div>
     </>

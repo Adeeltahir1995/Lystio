@@ -1,5 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
+import { createRoot } from 'react-dom/client';
+import ListingCard from '../ListingCard'; // Ensure this path is correct
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -18,7 +20,7 @@ const Map = ({ listings, minPrice, maxPrice }) => {
     let markerCount = 0;
 
     listings.forEach((listing) => {
-      const { location, rent, title, media } = listing;
+      const { location, rent } = listing;
       const [longitude, latitude] = location;
 
       if (rent >= minPrice && rent <= maxPrice) {
@@ -35,22 +37,19 @@ const Map = ({ listings, minPrice, maxPrice }) => {
         markerElement.style.width = 'max-content';
         markerElement.style.cursor = 'pointer';
 
+        // Create a container for the popup to render the React component into
+        const popupNode = document.createElement('div');
 
-        // Use the first image from media array for the popup
-        const imageUrl = media && media[0] ? media[0].cdnUrl : '';
+        // Use ReactDOM to render the ListingCard into the popupNode
+        const root = createRoot(popupNode);
+        root.render(<ListingCard listing={listing} visible={false}/>);
 
-        // Create popup with listing details
+        // Create popup with the ListingCard as content
         const popup = new mapboxgl.Popup({
           offset: 25,
           closeButton: false,
           closeOnClick: false,
-        }).setHTML(`
-          <div style="text-align: center;">
-            <img src="${imageUrl}" alt="${title}" style="width: 100px; height: auto; border-radius: 8px; margin-bottom: 5px;" />
-            <h4>${title}</h4>
-            <p>Price: $${rent}</p>
-          </div>
-        `);
+        }).setDOMContent(popupNode); // Use setDOMContent to add the React component
 
         // Create and add marker to the map
         const marker = new mapboxgl.Marker(markerElement)
