@@ -1,11 +1,12 @@
-"use client";
+"use client"
 import { useEffect, useState } from "react";
 import Map from "../components/Map";
 import Header from "@/components/Header";
+import ListingCard from "../components/ListingCard";
 
 export default function Home() {
   const [listings, setListings] = useState([]);
-  const [mapMarkers, setMapMarkers] = useState([]); // State for map markers
+  const [mapMarkers, setMapMarkers] = useState([]);
   const [paging, setPaging] = useState({
     pageCount: 0,
     page: 0,
@@ -68,49 +69,8 @@ export default function Home() {
       });
   };
 
-  const fetchMapData = () => {
-    const payload = {
-      filter: {
-        size: [10, 1000],
-        rent: [minPrice, maxPrice],
-        roomsBed: [0, 99],
-        roomsBath: [0, 99],
-        type: [1],
-        subType: [1],
-        condition: [1],
-        accessibility: [1],
-        rentType: ["rent"],
-        floorType: [1],
-        heatingType: [1],
-        availableNow: true,
-        within: polygon,
-        bbox: null,
-        near: null,
-        amenities: null,
-      },
-      zoom: 0,
-      bbox: null,
-    };
-
-    fetch("https://api.lystio.co/tenement/search/map", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setMapMarkers(data); // Store the map markers
-      })
-      .catch((error) => {
-        console.error("Error fetching map markers:", error);
-      });
-  };
-
   useEffect(() => {
     fetchData();
-    fetchMapData();
   }, [minPrice, maxPrice, polygon]);
 
   return (
@@ -125,17 +85,17 @@ export default function Home() {
           color: "black",
         }}
       >
-        {/* Map Section - occupies 50% of the screen width */}
+        {/* Map Section */}
         <div style={{ flex: "1", height: "100vh" }}>
           <Map
             listings={listings}
-            mapMarkers={mapMarkers} // Pass the map markers to Map component
+            mapMarkers={mapMarkers}
             minPrice={minPrice}
             maxPrice={maxPrice}
           />
         </div>
 
-        {/* Listings Panel - occupies 50% of the screen width */}
+        {/* Listings Panel */}
         <div
           style={{
             flex: "1",
@@ -162,39 +122,7 @@ export default function Home() {
             />
           </div>
           {listings.map((listing, index) => (
-            <div
-              key={index}
-              className="listing-item"
-              style={{
-                margin: "10px 0",
-                padding: "10px",
-                border: "1px solid #ccc",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <img
-                src={
-                  listing.media && listing.media[0]
-                    ? listing.media[0].cdnUrl
-                    : ""
-                }
-                alt={listing.title}
-                style={{
-                  width: "80px",
-                  height: "80px",
-                  objectFit: "cover",
-                  borderRadius: "5px",
-                  marginRight: "10px",
-                }}
-              />
-              <div>
-                <h3>{listing.title}</h3>
-                <p>{listing.abstract}</p>
-                <p>Price: ${listing.rent}</p>
-                <p>Size: {listing.size} m²</p>
-              </div>
-            </div>
+            <ListingCard key={index} listing={listing} />
           ))}
           <p>
             Page {paging.page + 1} of {paging.pageCount}

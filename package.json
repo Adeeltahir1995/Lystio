@@ -9,11 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@mapbox/mapbox-gl-draw": "^1.4.3",
+    "@mui/icons-material": "^6.1.6",
+    "@mui/material": "^6.1.6",
     "mapbox-gl": "^3.7.0",
     "next": "15.0.2",
     "react": "19.0.0-rc-02c0e824-20241028",
-    "react-dom": "19.0.0-rc-02c0e824-20241028"
+    "react-dom": "19.0.0-rc-02c0e824-20241028",
+    "swiper": "^11.1.14"
   },
   "devDependencies": {
     "eslint": "^8",
