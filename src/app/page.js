@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Map from "../components/Map";
+import Header from "@/components/Header";
 
 export default function Home() {
   const [listings, setListings] = useState([]);
@@ -113,78 +114,93 @@ export default function Home() {
   }, [minPrice, maxPrice, polygon]);
 
   return (
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden", backgroundColor:"white", color:"black" }}>
-      {/* Map Section - occupies 50% of the screen width */}
-      <div style={{ flex: "1", height: "100vh" }}>
-        <Map
-          listings={listings}
-          mapMarkers={mapMarkers} // Pass the map markers to Map component
-          minPrice={minPrice}
-          maxPrice={maxPrice}
-        />
-      </div>
-
-      {/* Listings Panel - occupies 50% of the screen width */}
+    <>
+      <Header />
       <div
         style={{
-          flex: "1",
-          padding: "10px",
-          overflowY: "auto",
+          display: "flex",
           height: "100vh",
+          overflow: "hidden",
+          backgroundColor: "white",
           color: "black",
         }}
       >
-        <h2>Listing Panel</h2>
-        <div>
-          <label>Min Price:</label>
-          <input
-            type="number"
-            value={minPrice}
-            onChange={(e) => setMinPrice(Number(e.target.value))}
-            style={{ marginRight: "10px" }}
-          />
-          <label>Max Price:</label>
-          <input
-            type="number"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(Number(e.target.value))}
+        {/* Map Section - occupies 50% of the screen width */}
+        <div style={{ flex: "1", height: "100vh" }}>
+          <Map
+            listings={listings}
+            mapMarkers={mapMarkers} // Pass the map markers to Map component
+            minPrice={minPrice}
+            maxPrice={maxPrice}
           />
         </div>
-        {listings.map((listing, index) => (
-          <div
-            key={index}
-            className="listing-item"
-            style={{
-              margin: "10px 0",
-              padding: "10px",
-              border: "1px solid #ccc",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <img
-              src={listing.media && listing.media[0] ? listing.media[0].cdnUrl : ""}
-              alt={listing.title}
-              style={{
-                width: "80px",
-                height: "80px",
-                objectFit: "cover",
-                borderRadius: "5px",
-                marginRight: "10px",
-              }}
+
+        {/* Listings Panel - occupies 50% of the screen width */}
+        <div
+          style={{
+            flex: "1",
+            padding: "10px",
+            overflowY: "auto",
+            height: "100vh",
+            color: "black",
+          }}
+        >
+          <h2>Listing Panel</h2>
+          <div>
+            <label>Min Price:</label>
+            <input
+              type="number"
+              value={minPrice}
+              onChange={(e) => setMinPrice(Number(e.target.value))}
+              style={{ marginRight: "10px" }}
             />
-            <div>
-              <h3>{listing.title}</h3>
-              <p>{listing.abstract}</p>
-              <p>Price: ${listing.rent}</p>
-              <p>Size: {listing.size} m²</p>
-            </div>
+            <label>Max Price:</label>
+            <input
+              type="number"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(Number(e.target.value))}
+            />
           </div>
-        ))}
-        <p>
-          Page {paging.page + 1} of {paging.pageCount}
-        </p>
+          {listings.map((listing, index) => (
+            <div
+              key={index}
+              className="listing-item"
+              style={{
+                margin: "10px 0",
+                padding: "10px",
+                border: "1px solid #ccc",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src={
+                  listing.media && listing.media[0]
+                    ? listing.media[0].cdnUrl
+                    : ""
+                }
+                alt={listing.title}
+                style={{
+                  width: "80px",
+                  height: "80px",
+                  objectFit: "cover",
+                  borderRadius: "5px",
+                  marginRight: "10px",
+                }}
+              />
+              <div>
+                <h3>{listing.title}</h3>
+                <p>{listing.abstract}</p>
+                <p>Price: ${listing.rent}</p>
+                <p>Size: {listing.size} m²</p>
+              </div>
+            </div>
+          ))}
+          <p>
+            Page {paging.page + 1} of {paging.pageCount}
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
