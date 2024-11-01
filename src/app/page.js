@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Map from "../components/Map";
 import Header from "@/components/Header";
 import ListingCard from "../components/ListingCard";
-import { div, TextField, Typography } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import ListingIcon from "../assets/listing.svg";
 import { searchAPIPayload } from "@/constants";
 import styles from "./index.module.css";
