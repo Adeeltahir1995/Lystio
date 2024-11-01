@@ -1,6 +1,6 @@
 # Lystio
 
-A **Property Listing App** built with React, showcasing real estate listings on a Mapbox map with interactive features like search, price filtering, and listing details in a visually appealing layout.
+A **Property Listing App** built with Next Js, showcasing real estate listings on a Mapbox map with interactive features like search, price filtering, and listing details in a visually appealing layout.
 
 ## Features
 
