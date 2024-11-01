@@ -1,8 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lystio
+
+A **Property Listing App** built with React, showcasing real estate listings on a Mapbox map with interactive features like search, price filtering, and listing details in a visually appealing layout.
+
+## Features
+
+### Map Integration
+- **Dark-Themed Map**: Utilizes Mapbox's dark theme for a modern and sleek appearance.
+- **Interactive Markers**: Displays listings as markers on the map, styled to match the application’s design.
+
+### Listing Details
+- **Hover Popups**: Hovering over a marker shows a popup with detailed information about the listing.
+- **Custom Styled Markers**: Each marker is styled with rounded edges and background color to match the app theme, making it easy to identify listings.
+
+### Search and Filters
+- **Title Search**: Users can search listings by title through a search bar, enabling quick access to specific properties.
+- **Price Range Filter**: Allows users to filter listings by minimum and maximum rent values, displaying only relevant listings.
+
+### Responsive Design
+- **Mobile & Desktop Optimization**: The app is designed to be fully responsive, providing an optimized experience on both desktop and mobile devices.
+
+### User Interface
+- **Material UI Components**: Ensures a consistent and professional UI with Material UI elements.
+- **Listing Card Component**: Each listing has a detailed card view with images, rent range, size, bed, and bath info, neatly organized for easy reading.
+
+### API Integration
+- **Real-time Data Fetching**: Retrieves data from the Lystio API to provide up-to-date property listings.
+- **Error Handling**: Handles fetch errors gracefully by displaying console errors and clearing listings when data fetch fails.
+
+## Tech Stack
+
+- **Frontend**: React, Material UI
+- **Map**: Mapbox GL
+- **Carousel**: Swiper
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js and npm installed.
+- Mapbox account with an API token.
+
+### Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/Adeeltahir1995/Lystio.git
+   cd Lystio
+
+To run the server:
 
 ```bash
 npm run dev
@@ -13,24 +58,3 @@ pnpm dev
 # or
 bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details 
