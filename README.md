@@ -29,7 +29,7 @@ A **Property Listing App** built with Next Js, showcasing real estate listings o
 
 ## Tech Stack
 
-- **Frontend**: React, Material UI
+- **Frontend**: Next Js, Material UI
 - **Map**: Mapbox GL
 - **Carousel**: Swiper
 
