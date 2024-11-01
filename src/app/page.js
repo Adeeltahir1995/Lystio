@@ -18,17 +18,16 @@ export default function Home() {
   const [polygon, setPolygon] = useState(null);
   const [minPrice, setMinPrice] = useState(100);
   const [maxPrice, setMaxPrice] = useState(10000);
-  const [searchText, setSearchText] = useState(""); // State for search input
+  const [searchText, setSearchText] = useState("");
 
-  // Fetch data function with searchText as a filter
-  const fetchData = (searchQuery = "") => {
+  const fetchData = () => {
     const payload = {
       filter: {
         size: [10, 1000],
         rent: [minPrice, maxPrice],
         roomsBed: [0, 99],
         roomsBath: [0, 99],
-        title: searchQuery ? { $regex: searchQuery, $options: "i" } : undefined, // Search by title with regex
+        title: searchText ? { $regex: searchText, $options: "i" } : undefined,
         type: [1],
         subType: [1],
         condition: [1],
@@ -78,18 +77,18 @@ export default function Home() {
       });
   };
 
+  // Fetch data when minPrice, maxPrice, polygon, or searchText changes
   useEffect(() => {
-    fetchData(searchText); // Fetch with current search text
+    fetchData();
   }, [minPrice, maxPrice, polygon, searchText]);
 
   // Handle search input change
   const handleSearchChange = (e) => {
-    setSearchText(e.target.value);
+    setSearchText(e.target.value); // Update search text state
   };
 
   return (
     <>
-      {/* Pass searchText and handleSearchChange to Header */}
       <Header searchText={searchText} onSearchChange={handleSearchChange} />
 
       <div
@@ -121,7 +120,7 @@ export default function Home() {
             color: "black",
           }}
         >
-          <Box sx={{ mb: 2, display: "flex", alignItems: "center", justifyContent:'space-between' }}>
+          <Box sx={{ mb: 2, display: "flex", alignItems: "center", justifyContent: 'space-between' }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <ListingIcon />
               <Typography variant="h5">Listing Around Me</Typography>
@@ -155,6 +154,7 @@ export default function Home() {
               gridTemplateColumns: "repeat(auto-fill, minmax(245px, 1fr))",
               gap: 2,
               mt: 2,
+              mb: 2,
             }}
           >
             {listings.map((listing, index) => (

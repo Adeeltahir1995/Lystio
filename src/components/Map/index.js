@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { createRoot } from 'react-dom/client';
-import ListingCard from '../ListingCard'; // Ensure this path is correct
+import ListingCard from '../ListingCard';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -11,7 +11,7 @@ const Map = ({ listings, minPrice, maxPrice }) => {
   useEffect(() => {
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/streets-v11',
+      style: 'mapbox://styles/mapbox/navigation-night-v1',
       center: [16.3738, 48.2082],
       zoom: 12,
     });
@@ -24,44 +24,48 @@ const Map = ({ listings, minPrice, maxPrice }) => {
       const [longitude, latitude] = location;
 
       if (rent >= minPrice && rent <= maxPrice) {
-        // Create marker element with price label
         const markerElement = document.createElement('div');
         markerElement.className = 'price-marker';
-        markerElement.innerText = `$${rent}`;
-        markerElement.style.backgroundColor = '#ff4757';
-        markerElement.style.color = '#fff';
-        markerElement.style.padding = '5px';
-        markerElement.style.borderRadius = '5px';
-        markerElement.style.fontWeight = 'bold';
-        markerElement.style.padding = '12px';
-        markerElement.style.width = 'max-content';
+        markerElement.innerText = `€${rent}`;
+        
+        markerElement.style.width = '76px';
+        markerElement.style.height = '35px';
+        markerElement.style.borderRadius = '22.5px 0px 0px 0px';
+        markerElement.style.opacity = '1';  
+        markerElement.style.backgroundColor = '#ffffff'; 
+        markerElement.style.color = '#000000';
+        markerElement.style.fontFamily = 'Alliance No.1';
+        markerElement.style.fontSize = '15px';
+        markerElement.style.fontWeight = '500';
+        markerElement.style.lineHeight = '22.5px';
+        markerElement.style.textAlign = 'left';
+        markerElement.style.display = 'flex';
+        markerElement.style.alignItems = 'center';
+        markerElement.style.justifyContent = 'center';
         markerElement.style.cursor = 'pointer';
+        markerElement.style.position = 'relative';
 
-        // Create a container for the popup to render the React component into
         const popupNode = document.createElement('div');
+        popupNode.style.position = 'absolute';
+        popupNode.style.transform = 'translate(-80%, -70%)';
 
-        // Use ReactDOM to render the ListingCard into the popupNode
         const root = createRoot(popupNode);
-        root.render(<ListingCard listing={listing} visible={false}/>);
+        root.render(<ListingCard listing={listing} visible={false} />);
 
-        // Create popup with the ListingCard as content
         const popup = new mapboxgl.Popup({
           offset: 25,
           closeButton: false,
           closeOnClick: false,
-        }).setDOMContent(popupNode); // Use setDOMContent to add the React component
+        }).setDOMContent(popupNode);
 
-        // Create and add marker to the map
         const marker = new mapboxgl.Marker(markerElement)
           .setLngLat([longitude, latitude])
           .addTo(map);
 
-        // Show popup on hover
         markerElement.addEventListener('mouseenter', () => {
           marker.setPopup(popup).togglePopup();
         });
 
-        // Hide popup when mouse leaves
         markerElement.addEventListener('mouseleave', () => {
           marker.togglePopup();
         });
@@ -71,7 +75,6 @@ const Map = ({ listings, minPrice, maxPrice }) => {
       }
     });
 
-    // Set map view based on marker count
     if (markerCount > 1) {
       map.fitBounds(bounds, { padding: 60, maxZoom: 13 });
     } else if (markerCount === 1) {
