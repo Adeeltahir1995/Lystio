@@ -4,6 +4,7 @@ import Map from "../components/Map";
 import Header from "@/components/Header";
 import ListingCard from "../components/ListingCard";
 import { Box, TextField, Typography } from "@mui/material";
+import ListingIcon from "../assets/listing.svg";
 
 export default function Home() {
   const [listings, setListings] = useState([]);
@@ -17,16 +18,17 @@ export default function Home() {
   const [polygon, setPolygon] = useState(null);
   const [minPrice, setMinPrice] = useState(100);
   const [maxPrice, setMaxPrice] = useState(10000);
+  const [searchText, setSearchText] = useState(""); // State for search input
 
-  // Fetch data function with debugging
-  const fetchData = () => {
-    console.log("Fetching with minPrice:", minPrice, "and maxPrice:", maxPrice);
+  // Fetch data function with searchText as a filter
+  const fetchData = (searchQuery = "") => {
     const payload = {
       filter: {
         size: [10, 1000],
         rent: [minPrice, maxPrice],
         roomsBed: [0, 99],
         roomsBath: [0, 99],
+        title: searchQuery ? { $regex: searchQuery, $options: "i" } : undefined, // Search by title with regex
         type: [1],
         subType: [1],
         condition: [1],
@@ -36,9 +38,6 @@ export default function Home() {
         heatingType: [1],
         availableNow: true,
         within: polygon,
-        bbox: null,
-        near: null,
-        amenities: null,
       },
       sort: {
         rent: null,
@@ -59,9 +58,14 @@ export default function Home() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("API response:", data);
         if (data.res) {
           setListings(data.res);
+          setMapMarkers(
+            data.res.map((item) => ({
+              lat: item.latitude,
+              lng: item.longitude,
+            }))
+          );
         }
         if (data.paging) {
           setPaging(data.paging);
@@ -70,16 +74,24 @@ export default function Home() {
       .catch((error) => {
         console.error("Error fetching listings:", error);
         setListings([]);
+        setMapMarkers([]);
       });
   };
 
   useEffect(() => {
-    fetchData();
-  }, [minPrice, maxPrice, polygon]);
+    fetchData(searchText); // Fetch with current search text
+  }, [minPrice, maxPrice, polygon, searchText]);
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
+  };
 
   return (
     <>
-      <Header />
+      {/* Pass searchText and handleSearchChange to Header */}
+      <Header searchText={searchText} onSearchChange={handleSearchChange} />
+
       <div
         style={{
           display: "flex",
@@ -103,45 +115,45 @@ export default function Home() {
         <div
           style={{
             flex: "0 0 40%",
-            padding: "20px", // Outer padding for the listing panel
+            padding: "20px",
             overflowY: "auto",
             height: "100vh",
             color: "black",
           }}
         >
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h5" gutterBottom>
-              Listing Around Me
-            </Typography>
+          <Box sx={{ mb: 2, display: "flex", alignItems: "center", justifyContent:'space-between' }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <ListingIcon />
+              <Typography variant="h5">Listing Around Me</Typography>
+            </Box>
+            <Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <TextField
+                  label="Min Price"
+                  type="number"
+                  value={minPrice}
+                  onChange={(e) => setMinPrice(Number(e.target.value))}
+                  variant="outlined"
+                  size="small"
+                />
 
-            {/* Price Filters */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <TextField
-                label="Min Price"
-                type="number"
-                value={minPrice}
-                onChange={(e) => setMinPrice(Number(e.target.value))}
-                variant="outlined"
-                size="small"
-              />
-
-              <TextField
-                label="Max Price"
-                type="number"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(Number(e.target.value))}
-                variant="outlined"
-                size="small"
-              />
+                <TextField
+                  label="Max Price"
+                  type="number"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(Number(e.target.value))}
+                  variant="outlined"
+                  size="small"
+                />
+              </Box>
             </Box>
           </Box>
 
-          {/* Grid Layout for Listings */}
           <Box
             sx={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(245px, 1fr))",
-              gap: 2, // Gap between cards
+              gap: 2,
               mt: 2,
             }}
           >
