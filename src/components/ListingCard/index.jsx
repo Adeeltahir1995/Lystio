@@ -6,15 +6,17 @@ import {
   Box,
   Chip,
   IconButton,
-  Avatar,
 } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
+import SwiperCore, { Autoplay, Pagination } from "swiper";
+import "swiper/swiper-bundle.css";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import VerifiedIcon from "@mui/icons-material/Verified";
+import VerifiedIcon from "../../assets/verified.svg";
 import BedIcon from "../../assets/bed.svg";
 import BathtubIcon from "../../assets/bath.svg";
 import SquareFootIcon from "../../assets/cube.svg";
+
+SwiperCore.use([Autoplay, Pagination]);
 
 const ListingCard = ({ listing, visible }) => {
   return (
@@ -23,7 +25,13 @@ const ListingCard = ({ listing, visible }) => {
     >
       {/* Image Slider */}
       <Box sx={{ position: "relative" }}>
-        <Swiper spaceBetween={0} slidesPerView={1}>
+        <Swiper
+          spaceBetween={0}
+          slidesPerView={1}
+          autoplay={{ delay: 1000, disableOnInteraction: false }}
+          pagination={{ clickable: true, dynamicBullets: true }}
+          loop={true}
+        >
           {listing.media.map((image, index) => (
             <SwiperSlide key={index}>
               <img
@@ -34,22 +42,22 @@ const ListingCard = ({ listing, visible }) => {
             </SwiperSlide>
           ))}
         </Swiper>
+        {visible && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: 16,
+              left: 16,
+              display: "flex",
+              gap: 1,
+              zIndex: 1000,
+            }}
+          >
+            <Chip label="New" color="primary" />
+            <Chip label="3D Tour" color="secondary" />
+          </Box>
+        )}
 
-        {/* Overlay Chips */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: 16,
-            left: 16,
-            display: "flex",
-            gap: 1,
-          }}
-        >
-          <Chip label="New" color="primary" />
-          <Chip label="3D Tour" color="secondary" />
-        </Box>
-
-        {/* Favorite Icon */}
         <IconButton
           sx={{
             position: "absolute",
@@ -63,17 +71,27 @@ const ListingCard = ({ listing, visible }) => {
       </Box>
 
       {/* Card Content */}
-      <CardContent>
+      <CardContent sx={{ padding: "12px !important" }}>
+        {" "}
+        {/* Removed padding-bottom */}
         {visible && (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <VerifiedIcon color="primary" fontSize="small" />
-            <Typography
-              variant="caption"
-              color="textSecondary"
-              sx={{ fontFamily: "Alliance No.1" }}
-            >
-              Verified
-            </Typography>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <VerifiedIcon height="24px" width="24px" />
+              <Typography
+                sx={{
+                  fontFamily: "Alliance No.1",
+                  fontSize: "12px",
+                  fontWeight: 500,
+                  lineHeight: "16.8px",
+                  textAlign: "left",
+                  color: "#5A0CFF",
+                  marginBottom: "6px",
+                }}
+              >
+                Verified
+              </Typography>
+            </Box>
             <Typography
               variant="caption"
               color="textSecondary"
@@ -88,10 +106,8 @@ const ListingCard = ({ listing, visible }) => {
             </Typography>
           </Box>
         )}
-
         {visible && (
           <Typography
-            variant="h6"
             component="div"
             sx={{
               fontFamily: "Alliance No.1",
@@ -100,6 +116,9 @@ const ListingCard = ({ listing, visible }) => {
               lineHeight: "22.5px",
               textAlign: "left",
               color: "#000000",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
             }}
           >
             {listing.title}
@@ -112,20 +131,17 @@ const ListingCard = ({ listing, visible }) => {
         >
           {listing.address}, {listing.city}
         </Typography>
-
         <Box
           sx={{
             display: "flex",
-            gap: 1,
             alignItems: "center",
             my: 1,
             justifyContent: "space-between",
           }}
         >
-          <Box sx={{ display: "flex", gap: "2px", alignItems: "center" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <SquareFootIcon width="24" height="24" />
             <Typography
-              variant="body2"
               sx={{
                 fontFamily: "Alliance No.1",
                 fontSize: "12px",
@@ -138,10 +154,9 @@ const ListingCard = ({ listing, visible }) => {
             </Typography>
           </Box>
 
-          <Box sx={{ display: "flex", gap: "2px", alignItems: "center" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <BedIcon width="24" height="24" />
             <Typography
-              variant="body2"
               sx={{
                 fontFamily: "Alliance No.1",
                 fontSize: "12px",
@@ -154,10 +169,9 @@ const ListingCard = ({ listing, visible }) => {
             </Typography>
           </Box>
 
-          <Box sx={{ display: "flex", gap: "2px", alignItems: "center" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <BathtubIcon width="24" height="24" />
             <Typography
-              variant="body2"
               sx={{
                 fontFamily: "Alliance No.1",
                 fontSize: "12px",
@@ -170,7 +184,6 @@ const ListingCard = ({ listing, visible }) => {
             </Typography>
           </Box>
         </Box>
-
         <Typography
           color="primary"
           sx={{

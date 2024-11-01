@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import Map from "../components/Map";
 import Header from "@/components/Header";
 import ListingCard from "../components/ListingCard";
-import { Box } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 
 export default function Home() {
   const [listings, setListings] = useState([]);
@@ -18,7 +18,9 @@ export default function Home() {
   const [minPrice, setMinPrice] = useState(100);
   const [maxPrice, setMaxPrice] = useState(10000);
 
+  // Fetch data function with debugging
   const fetchData = () => {
+    console.log("Fetching with minPrice:", minPrice, "and maxPrice:", maxPrice);
     const payload = {
       filter: {
         size: [10, 1000],
@@ -57,6 +59,7 @@ export default function Home() {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log("API response:", data);
         if (data.res) {
           setListings(data.res);
         }
@@ -86,7 +89,7 @@ export default function Home() {
           color: "black",
         }}
       >
-        {/* Map Section - Takes up 60% width */}
+        {/* Map Section - Takes up 58% width */}
         <div style={{ flex: "0 0 58%", height: "100vh" }}>
           <Map
             listings={listings}
@@ -106,22 +109,32 @@ export default function Home() {
             color: "black",
           }}
         >
-          <h2>Listing Panel</h2>
-          <div>
-            <label>Min Price:</label>
-            <input
-              type="number"
-              value={minPrice}
-              onChange={(e) => setMinPrice(Number(e.target.value))}
-              style={{ marginRight: "10px" }}
-            />
-            <label>Max Price:</label>
-            <input
-              type="number"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
-            />
-          </div>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="h5" gutterBottom>
+              Listing Around Me
+            </Typography>
+
+            {/* Price Filters */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <TextField
+                label="Min Price"
+                type="number"
+                value={minPrice}
+                onChange={(e) => setMinPrice(Number(e.target.value))}
+                variant="outlined"
+                size="small"
+              />
+
+              <TextField
+                label="Max Price"
+                type="number"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Number(e.target.value))}
+                variant="outlined"
+                size="small"
+              />
+            </Box>
+          </Box>
 
           {/* Grid Layout for Listings */}
           <Box

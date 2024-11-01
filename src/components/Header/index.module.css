@@ -3,9 +3,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
+    padding: 20px 40px;
     background-color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #ccc;
   }
   
   .logo {
@@ -22,21 +23,30 @@
     margin: 0 20px;
   }
   
-  .searchInput {
-    width: 100%;
-    padding: 8px 15px;
-    border: 1px solid #ccc;
-    border-radius: 20px 0 0 20px;
-    outline: none;
-    font-size: 16px;
-  }
+.searchInput {
+  width: 100%;
+  padding: 8px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px 0 0 8px;
+  outline: none;
+  font-size: 16px;
+}
+
+.searchInput::placeholder {
+  font-family: 'Alliance No.1', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 22.5px;
+  text-align: left;
+}
+
   
   .searchButton {
     padding: 8px 15px;
     background-color: #b664f1;
     color: white;
     border: none;
-    border-radius: 0 20px 20px 0;
+    border-radius: 0 8px 8px 0;
     cursor: pointer;
     display: flex;
     align-items: center;
