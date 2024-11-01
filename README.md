@@ -58,3 +58,7 @@ pnpm dev
 # or
 bun dev
 ```
+
+![Screenshot 2024-11-01 at 11 51 26 PM](https://github.com/user-attachments/assets/0bbe66d9-3919-4762-8daa-f99b8d127eff)
+
+
