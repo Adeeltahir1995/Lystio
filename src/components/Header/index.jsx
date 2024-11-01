@@ -1,7 +1,8 @@
 import React from 'react';
-import styles from './index.module.css';
 import User from '../../assets/user.svg';
 import Logo from '../../assets/logo.svg';
+
+import styles from './index.module.css';
 
 const Header = ({ searchText, onSearchChange }) => {
   return (

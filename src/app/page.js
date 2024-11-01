@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import Map from "../components/Map";
 import Header from "@/components/Header";
 import ListingCard from "../components/ListingCard";
-import { Box, TextField, Typography } from "@mui/material";
+import { div, TextField, Typography } from "@mui/material";
 import ListingIcon from "../assets/listing.svg";
+import { searchAPIPayload } from "@/constants";
+import styles from "./index.module.css";
 
 export default function Home() {
   const [listings, setListings] = useState([]);
@@ -21,39 +23,20 @@ export default function Home() {
   const [searchText, setSearchText] = useState("");
 
   const fetchData = () => {
-    const payload = {
-      filter: {
-        size: [10, 1000],
-        rent: [minPrice, maxPrice],
-        roomsBed: [0, 99],
-        roomsBath: [0, 99],
-        title: searchText ? { $regex: searchText, $options: "i" } : undefined,
-        type: [1],
-        subType: [1],
-        condition: [1],
-        accessibility: [1],
-        rentType: ["rent"],
-        floorType: [1],
-        heatingType: [1],
-        availableNow: true,
-        within: polygon,
-      },
-      sort: {
-        rent: null,
-        distance: null,
-      },
-      paging: {
-        pageSize: 10,
-        page: paging.page,
-      },
-    };
-
     fetch("https://api.lystio.co/tenement/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(
+        searchAPIPayload({
+          minPrice,
+          maxPrice,
+          searchText,
+          polygon,
+          paging,
+        })
+      ),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -77,31 +60,20 @@ export default function Home() {
       });
   };
 
-  // Fetch data when minPrice, maxPrice, polygon, or searchText changes
   useEffect(() => {
     fetchData();
   }, [minPrice, maxPrice, polygon, searchText]);
 
-  // Handle search input change
   const handleSearchChange = (e) => {
-    setSearchText(e.target.value); // Update search text state
+    setSearchText(e.target.value);
   };
 
   return (
     <>
       <Header searchText={searchText} onSearchChange={handleSearchChange} />
 
-      <div
-        style={{
-          display: "flex",
-          height: "100vh",
-          overflow: "hidden",
-          backgroundColor: "white",
-          color: "black",
-        }}
-      >
-        {/* Map Section - Takes up 58% width */}
-        <div style={{ flex: "0 0 58%", height: "100vh" }}>
+      <div className={styles.container}>
+        <div className={styles.mapSection}>
           <Map
             listings={listings}
             mapMarkers={mapMarkers}
@@ -110,23 +82,14 @@ export default function Home() {
           />
         </div>
 
-        {/* Listing Panel Section - Takes up 40% width */}
-        <div
-          style={{
-            flex: "0 0 40%",
-            padding: "20px",
-            overflowY: "auto",
-            height: "100vh",
-            color: "black",
-          }}
-        >
-          <Box sx={{ mb: 2, display: "flex", alignItems: "center", justifyContent: 'space-between' }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <div className={styles.listingSection}>
+          <div className={styles.listingContainer}>
+            <div className={styles.listingTextContainer}>
               <ListingIcon />
-              <Typography variant="h5">Listing Around Me</Typography>
-            </Box>
-            <Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Typography variant="h5" className={styles.listingTitle}>Listing Around Me</Typography>
+            </div>
+            <div>
+              <div className={styles.priceRange}>
                 <TextField
                   label="Min Price"
                   type="number"
@@ -144,23 +107,15 @@ export default function Home() {
                   variant="outlined"
                   size="small"
                 />
-              </Box>
-            </Box>
-          </Box>
+              </div>
+            </div>
+          </div>
 
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(245px, 1fr))",
-              gap: 2,
-              mt: 2,
-              mb: 2,
-            }}
-          >
+          <div className={styles.gridContainer}>
             {listings.map((listing, index) => (
               <ListingCard key={index} listing={listing} visible={true} />
             ))}
-          </Box>
+          </div>
         </div>
       </div>
     </>

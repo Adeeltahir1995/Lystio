@@ -1,0 +1,53 @@
+.container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: white;
+  color: black;
+}
+
+.lisitngTitle {
+  font-family: 'Alliance No.1', sans-serif;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 31.2px;
+  text-align: left;
+}
+
+.mapSection {
+  flex: 0 0 58%;
+  height: 100vh;
+}
+
+.listingSection {
+  flex: 0 0 40%;
+  padding: 20px;
+  overflow-y: auto;
+  height: 100vh;
+  color: black;
+}
+
+.listingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.listingTextContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.priceRange {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(245px, 1fr));
+  gap: 2rem;
+  margin-top: 20px;
+}
